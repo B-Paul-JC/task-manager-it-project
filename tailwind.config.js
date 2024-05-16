@@ -11,19 +11,34 @@ export default {
     colors: {
       transparent: "transparent",
       current: "currentColor",
+      green: "#03c04a",
+      orange: "#fa8128",
       white: "#ffffff",
       purple: "#3f3cbb",
+      blue: "#1791c8",
       midnight: "#121063",
       metal: "#565584",
-      tahiti: "#3ab7bf",
+      tahiti: "#3A8EBF",
+      "tahiti-shade": "#3A95BF71",
       silver: "#ecebff",
       "bubble-gum": "#ff77e9",
       bermuda: "#78dcca",
+      grey: "#f5f5f5",
+      main: "#f1f1f1",
+      "black-shade": "#AAAAAA",
+      black: "#000000",
     },
     fontFamily: {
       "open-sans": ["Open Sans", "sans-serif"],
       "noto-sans": ["Noto Sans", "sans-serif"],
       roboto: ["Roboto", "sans-serif"],
+      poppins: ["Poppins", "sans-serif"],
+    },
+    transitionDuration: {
+      DEFAULT: "300ms",
+      fast: "150ms",
+      slow: "800ms",
+      moderate: "500ms",
     },
     container: {
       padding: {
@@ -44,5 +59,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };
