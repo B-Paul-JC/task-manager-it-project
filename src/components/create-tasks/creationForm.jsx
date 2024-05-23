@@ -1,20 +1,21 @@
 /* eslint-disable react/prop-types */
-import { useReducer, Children } from "react";
-import { reducer } from "../functions/reducer";
+import { Children } from "react";
 import { submitForm } from "../functions/createTask";
 import { FaTimesCircle } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  TCF_DEADLINE,
+  TCF_DESC,
+  TCF_PRIORITY,
+  TCF_TEAM,
+  TCF_TITLE,
+} from "../functions/actions";
 
-export function CreationForm({ onClose, teams }) {
-  const [state, dispatch] = useReducer(reducer, {
-    title: "",
-    description: "",
-    priority: "low",
-    team: {
-      id: "",
-      name: "",
-    },
-    deadline: "",
-  });
+export function CreationForm({ onClose }) {
+  const tcf_state = useSelector((state) => state.creation.value);
+  const { teams } = useSelector((state) => state.tasksAlert.value);
+  const dispatch = useDispatch();
+
   const priorities = [
     "URGENT",
     "IMPORTANT",
@@ -23,23 +24,20 @@ export function CreationForm({ onClose, teams }) {
     "OPTIONAL",
   ];
 
-  const handleTitleChange = (e) =>
-    dispatch({ type: "setTitle", value: e.target.value });
-  const handleDescriptionChange = (e) =>
-    dispatch({ type: "setDescription", value: e.target.value });
-  const handlePriorityChange = (e) =>
-    dispatch({ type: "setPriority", value: e.target.value });
-  const handleTeamChange = (e) => {
-    dispatch({
-      type: "setTeam",
-      value: {
-        id: e.target.dataset.id,
-        name: e.target.textContent,
-      },
-    });
-  };
+  const handleTitleChange = ({ target }) => dispatch(TCF_TITLE(target.value));
+  const handleDescriptionChange = ({ target }) =>
+    dispatch(TCF_DESC(target.value));
+  const handlePriorityChange = ({ target }) =>
+    dispatch(TCF_PRIORITY(target.value));
+  const handleTeamChange = ({ target }) =>
+    dispatch(
+      TCF_TEAM({
+        id: target.dataset.id,
+        name: target.textContent,
+      })
+    );
 
-  const { team } = state;
+  const { team } = tcf_state;
 
   const handleCreateTask = (e) => {
     e.preventDefault();
@@ -87,7 +85,7 @@ export function CreationForm({ onClose, teams }) {
                   id="title"
                   name="title"
                   className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                  value={state.title}
+                  value={tcf_state.title}
                   onChange={(e) => handleTitleChange(e)}
                 />
               </div>
@@ -102,7 +100,7 @@ export function CreationForm({ onClose, teams }) {
                   type="text"
                   id="description"
                   className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                  value={state.description}
+                  value={tcf_state.description}
                   name="description"
                   onChange={(e) => handleDescriptionChange(e)}
                 />
@@ -117,7 +115,7 @@ export function CreationForm({ onClose, teams }) {
                 <select
                   id="priority"
                   className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                  value={state.priority}
+                  value={tcf_state.priority}
                   name="priority"
                   onChange={(e) => handlePriorityChange(e)}
                 >
@@ -170,9 +168,9 @@ export function CreationForm({ onClose, teams }) {
                   id="deadline"
                   name="deadline"
                   className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                  value={state.deadline}
-                  onChange={(e) =>
-                    dispatch({ type: "setDeadline", value: e.target.value })
+                  value={tcf_state.deadline}
+                  onChange={({ target }) =>
+                    dispatch(TCF_DEADLINE(target.value))
                   }
                 />
               </div>

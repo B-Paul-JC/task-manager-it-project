@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useState, useEffect, Children } from "react";
+import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
+import { SET_SOCKET, SET_TEAMS } from "./actions";
+import { useSelector } from "react-redux";
 
-export const useSocket = ({ handShakeAuth, url }) => {
-  const [socket, setSocket] = useState(null);
-  const [teams, setTeams] = useState([]);
+export const useSocket = ({ handShakeAuth, url, dispatch }) => {
+  const socketAndTeams = useSelector((state) => state.socketAndTeams.value);
+  const { socket, teams } = socketAndTeams;
 
   useEffect(() => {
     const socketUrl = url;
@@ -17,10 +19,11 @@ export const useSocket = ({ handShakeAuth, url }) => {
     };
 
     const socketInstance = io(socketUrl, socketOptions);
-    setSocket(socketInstance);
+
+    dispatch(SET_SOCKET(socketInstance));
 
     return () => socketInstance.disconnect();
-  }, [url]);
+  }, [dispatch, socket, url]);
 
   useEffect(() => {
     if (socket && typeof socket.emit === "function") {
@@ -40,10 +43,10 @@ export const useSocket = ({ handShakeAuth, url }) => {
       });
 
       socket.on("teams", (data) => {
-        setTeams(data);
+        dispatch(SET_TEAMS(teams));
       });
     }
-  }, [handShakeAuth, socket]);
+  }, [handShakeAuth, teams, socket, dispatch]);
 
   return { socket, teams };
 };

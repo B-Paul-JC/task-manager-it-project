@@ -3,30 +3,29 @@
 import { AppSideBar } from "./components/sidebar";
 import { Header } from "./components/header";
 import TasksView from "./components/view-tasks/tasksView";
-import { useState } from "react";
 import "./styles/app.css";
 import { useLoaderData } from "react-router-dom";
 import { useSocket } from "./components/functions/socketHook";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const { taskType, teamId } = useLoaderData();
-  const { socket, teams } = useSocket({
+  const { taskType } = useLoaderData();
+  const isCollapsed = useSelector((state) => state.collapse.value);
+  const dispatch = useDispatch();
+
+  useSocket({
     handShakeAuth: "oauth",
     url: "http://localhost:3000",
-    onConnect: () => {
-      console.log("Connected to socket");
-      socket.emit("subscribe", teamId);
-    },
+    dispatch,
   });
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <>
-      <AppSideBar {...{ isCollapsed, setIsCollapsed, teamId, teams }} />
+      <AppSideBar />
       <main className="font-poppins">
-        <Header {...{ isCollapsed, setIsCollapsed, taskType, teamId, teams }} />
+        <Header />
         <section className={`${isCollapsed ? "ml-16" : "ml-72"} pt-28 mr-10`}>
-          {!taskType ? "" : <TasksView {...{ taskType, teamId, teams }} />}
+          {!taskType ? "" : <TasksView {...{ taskType }} />}
         </section>
       </main>
     </>

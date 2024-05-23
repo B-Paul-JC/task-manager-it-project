@@ -1,73 +1,51 @@
-import { Children, useEffect, useReducer } from "react";
-import { registerReducer } from "../functions/reducer";
-
-const initialState = {
-  name: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  team: null,
-  errors: {},
-  teams: [],
-};
+import { Children } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  R_EMAIL,
+  R_ERROR,
+  R_NAME,
+  R_PWORD,
+  R_TEAM,
+} from "../functions/actions";
 
 export default function RegisterPage() {
-  const [state, dispatch] = useReducer(registerReducer, initialState);
-
-  useEffect(() => {
-    fetch("http://localhost:3001/api/teams/all", { method: "POST" })
-      .then((response) => {
-        // Check if the response is successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        // Parse the response body as JSON
-        return response.json();
-      })
-      .then((data) => {
-        // Use the data here
-        dispatch({ type: "setTeams", value: data.teams });
-      })
-      .catch((error) => {
-        // Handle errors
-        console.error("There was a problem with the fetch operation:", error);
-      });
-  }, []);
+  const formState = useSelector((state) => state.register.value);
+  const { teams } = useSelector((state) => state.socketAndTeams.value);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = {};
-    if (!state.name || state.name.trim().length === 0) {
+    if (!formState.name || formState.name.trim().length === 0) {
       errors.name = "Name is required";
     }
-    if (!state.email || !state.email.match(/^[\w-.]+@[\w-]+\.[a-zA-Z]+$/)) {
+    if (
+      !formState.email ||
+      !formState.email.match(/^[\w-.]+@[\w-]+\.[a-zA-Z]+$/)
+    ) {
       errors.email = "Email is required and must be valid email";
     }
     if (
-      !state.password ||
-      state.password.length < 6 ||
-      state.password !== state.confirmPassword
+      !formState.password ||
+      formState.password.length < 6 ||
+      formState.password !== formState.confirmPassword
     ) {
       errors.password =
         "Password is required and must be at least 6 characters and match confirm password";
     }
-    dispatch({
-      type: "setError",
-      key: "team",
-      value: state.team ? null : "Team is required",
-    });
-    dispatch({ type: "setError", key: "name", value: errors.name });
-    dispatch({ type: "setError", key: "email", value: errors.email });
-    dispatch({ type: "error", key: "password", value: errors.password });
+    dispatch(R_ERROR("team", formState.team ? null : "Team is required"));
+    dispatch(R_ERROR("name", errors.name));
+    dispatch(R_ERROR("email", errors.email));
+    dispatch(R_ERROR("password", errors.password));
     if (
       Object.keys(errors).length === 0 &&
-      state.team &&
-      state.name &&
-      state.email &&
-      state.password &&
-      state.password === state.confirmPassword
+      formState.team &&
+      formState.name &&
+      formState.email &&
+      formState.password &&
+      formState.password === formState.confirmPassword
     ) {
-      // submitthe form to the server
+      // submit the form to the server
     }
   };
 
@@ -78,44 +56,40 @@ export default function RegisterPage() {
         Name
         <input
           type="text"
-          value={state.name}
-          onChange={(e) => dispatch({ type: "setName", value: e.target.value })}
+          value={formState.name}
+          onChange={({ target }) => dispatch(R_NAME(target.value))}
         />
-        {state.errors.name && (
-          <div style={{ color: "red" }}>{state.errors.name}</div>
+        {formState.errors.name && (
+          <div style={{ color: "red" }}>{formState.errors.name}</div>
         )}
       </label>
       <label>
         Email
         <input
           type="email"
-          value={state.email}
-          onChange={(e) =>
-            dispatch({ type: "setEmail", value: e.target.value })
-          }
+          value={formState.email}
+          onChange={({ target }) => dispatch(R_EMAIL(target.value))}
         />
-        {state.errors.email && (
-          <div style={{ color: "red" }}>{state.errors.email}</div>
+        {formState.errors.email && (
+          <div style={{ color: "red" }}>{formState.errors.email}</div>
         )}
       </label>
       <label>
         Password
         <input
           type="password"
-          value={state.password}
-          onChange={(e) =>
-            dispatch({ type: "setPassword", value: e.target.value })
-          }
+          value={formState.password}
+          onChange={({ target }) => dispatch(R_PWORD(target.value))}
         />
-        {state.errors.password && (
-          <div style={{ color: "red" }}>{state.errors.password}</div>
+        {formState.errors.password && (
+          <div style={{ color: "red" }}>{formState.errors.password}</div>
         )}
       </label>
       <label>
         Confirm Password
         <input
           type="password"
-          value={state.confirmPassword}
+          value={formState.confirmPassword}
           onChange={(e) =>
             dispatch({ type: "setConfirmPassword", value: e.target.value })
           }
@@ -124,12 +98,12 @@ export default function RegisterPage() {
       <label>
         Team
         <select
-          value={state.team}
-          onChange={(e) => dispatch({ type: "setTeam", value: e.target.value })}
+          value={formState.team}
+          onChange={({ target }) => dispatch(R_TEAM(target.value))}
         >
           <option value={null}>Please select a team</option>
           {Children.toArray(
-            state.teams
+            teams
               .sort((a, b) => {
                 if (a.teamName < b.teamName) return -1;
                 if (a.teamName > b.teamName) return 1;
@@ -142,8 +116,8 @@ export default function RegisterPage() {
               ))
           )}
         </select>
-        {state.errors.team && (
-          <div style={{ color: "red" }}>{state.errors.team}</div>
+        {formState.errors.team && (
+          <div style={{ color: "red" }}>{formState.errors.team}</div>
         )}
       </label>
       <button type="submit">Sign up</button>

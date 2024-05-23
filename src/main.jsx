@@ -5,6 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import "./styles.css";
 import ErrorPage from "./components/errorPage.jsx";
+import { Provider } from "react-redux";
+import store from "./components/functions/store";
 
 const router = createBrowserRouter([
   {
@@ -25,8 +27,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ProSidebarProvider>
-      <RouterProvider router={router} />
-    </ProSidebarProvider>
+    <Provider store={store}>
+      <ProSidebarProvider>
+        <RouterProvider router={router} />
+      </ProSidebarProvider>
+    </Provider>
   </React.StrictMode>
 );

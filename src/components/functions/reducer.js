@@ -1,4 +1,37 @@
-export const reducer = (state, action) => {
+const creationInitialState = {
+  title: "",
+  description: "",
+  priority: "low",
+  team: {
+    id: "",
+    name: "",
+  },
+  deadline: "",
+};
+
+const tasksAlertInitialState = {
+  teamId: "",
+  taskType: "",
+  activeCount: 0,
+  pendingCount: 0,
+  completedCount: 0,
+};
+
+const registerInitialState = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  team: null,
+  errors: {},
+};
+
+const socketAndTeamState = {
+  socket: null,
+  teams: [],
+};
+
+export const creationReducer = (state = creationInitialState, action) => {
   switch (action.type) {
     case "setTitle":
       return { ...state, title: action.value };
@@ -11,11 +44,11 @@ export const reducer = (state, action) => {
     case "setDeadline":
       return { ...state, deadline: action.value };
     default:
-      throw new Error();
+      return state;
   }
 };
 
-export const tasksAlertReducer = (state, action) => {
+export const tasksAlertReducer = (state = tasksAlertInitialState, action) => {
   switch (action.type) {
     case "setTeams":
       return { ...state, teams: action.value };
@@ -29,10 +62,12 @@ export const tasksAlertReducer = (state, action) => {
       return { ...state, pendingCount: action.value };
     case "completed":
       return { ...state, completedCount: action.value };
+    default:
+      return state;
   }
 };
 
-export const registerReducer = (state, action) => {
+export const registerReducer = (state = registerInitialState, action) => {
   switch (action.type) {
     case "setName":
       return { ...state, name: action.value };
@@ -49,9 +84,23 @@ export const registerReducer = (state, action) => {
         ...state,
         errors: { ...state.errors, [action.key]: action.value },
       };
+    default:
+      return state;
+  }
+};
+
+export const collapseReducer = (state = false, action) => {
+  state = !action.value;
+  return state;
+};
+
+export const socketAndTeamReducer = (state = socketAndTeamState, action) => {
+  switch (action.type) {
+    case "setSocket":
+      return { ...state, socket: action.value };
     case "setTeams":
       return { ...state, teams: action.value };
     default:
-      throw new Error();
+      return state;
   }
 };

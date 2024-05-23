@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { CreationConfirmation } from "./create-tasks/confirmation";
 import { CreationForm } from "./create-tasks/creationForm";
+import { useSelector } from "react-redux";
 
-export function Header(props) {
-  const { taskType, teamId, teams } = props;
+export function Header() {
+  const tasksAlert = useSelector((state) => state.tasksAlert.value);
   const [isAdmin, setIsAdmin] = useState(true);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isCreatingTask, setIsCreatingTask] = useState(false);
@@ -13,12 +14,12 @@ export function Header(props) {
   return (
     <header className="absolute top bg-white w-full flex flex-row items-end justify-between p-4 shadow-md pl-72 z-2 font-poppins">
       <div>
-        {!taskType ? (
+        {!tasksAlert?.taskType ? (
           <></>
         ) : (
           <>
             <h3 className="font-bold">Tasks</h3>
-            <h5>A list of all the {taskType} tasks for you team</h5>
+            <h5>A list of all the {tasksAlert?.taskType} tasks for you team</h5>
           </>
         )}
       </div>
@@ -33,7 +34,7 @@ export function Header(props) {
         ) : (
           ""
         )}
-        <h6 className="inline text-xs py-2">Team ID: #{teamId}</h6>
+        <h6 className="inline text-xs py-2">Team ID: #{tasksAlert?.teamId}</h6>
       </div>
       {isCreateTaskModalOpen ? (
         <CreationForm
@@ -43,7 +44,6 @@ export function Header(props) {
               setIsCreatingTask(true);
             },
             onCreateTask: () => setIsCreateTaskModalOpen(false),
-            teams,
           }}
         />
       ) : (

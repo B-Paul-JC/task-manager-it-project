@@ -19,6 +19,8 @@ import {
   FaHome,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { TOGGLE_COLLAPSED } from "./functions/actions";
 
 /**
  * The sidebar component that contains the main navigation
@@ -27,8 +29,10 @@ import { Link } from "react-router-dom";
  * open or closed by clicking on the hamburger button.
  */
 
-export function AppSideBar(props) {
-  const { isCollapsed, setIsCollapsed } = props;
+export function AppSideBar() {
+  const isCollapsed = useSelector((state) => state.collapse.value);
+  const dispatch = useDispatch();
+
   return (
     <>
       <Sidebar
@@ -62,7 +66,7 @@ export function AppSideBar(props) {
             className={`flex flex-row  hover:bg-transparent ${
               !isCollapsed ? "h-36" : "h-10 mt-4"
             } items-center justify-center`}
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={() => dispatch(TOGGLE_COLLAPSED())}
           >
             <img src={Logo} className="w-32" />
           </MenuItem>
