@@ -1,3 +1,7 @@
 * {
   transition: 300ms;
 }
+
+.rive canvas {
+  height: 100%;
+}

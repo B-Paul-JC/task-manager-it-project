@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import Logo from "../assets/Manager.gif";
+import Logo from "../assets/images/Manager.gif";
 import {
   Sidebar,
   Menu,
@@ -7,7 +7,7 @@ import {
   sidebarClasses,
   menuClasses,
 } from "react-pro-sidebar";
-import { Notis } from "./view-tasks/notifier";
+import { Notification } from "./view-tasks/notifier";
 import {
   FaUsers,
   FaCalendar,
@@ -75,19 +75,19 @@ export function AppSideBar(props) {
             icon={<FaPlayCircle />}
             component={<Link to={"/tasks/active"} />}
           >
-            Active <Notis taskType="active" />
+            Active <Notification taskType="active" />
           </MenuItem>
           <MenuItem
             icon={<FaPauseCircle />}
             component={<Link to={"/tasks/pending"} />}
           >
-            Pending <Notis taskType="pending" />
+            Pending <Notification taskType="pending" />
           </MenuItem>
           <MenuItem
             icon={<FaCheckCircle />}
             component={<Link to={"/tasks/completed"} />}
           >
-            Completed <Notis taskType="completed" />
+            Completed <Notification taskType="completed" />
           </MenuItem>
 
           <MenuItem>User</MenuItem>

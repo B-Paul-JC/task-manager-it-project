@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { CreationConfirmation } from "./create-tasks/confirmation";
 import { CreationForm } from "./create-tasks/creationForm";
 
 export function Header(props) {
-  const { taskType, teamId } = props;
+  const { taskType, teamId, teams } = props;
   const [isAdmin, setIsAdmin] = useState(true);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const [isCreatingTask, setIsCreatingTask] = useState(false);
 
   return (
     <header className="absolute top bg-white w-full flex flex-row items-end justify-between p-4 shadow-md pl-72 z-2 font-poppins">
@@ -37,9 +38,20 @@ export function Header(props) {
       {isCreateTaskModalOpen ? (
         <CreationForm
           {...{
-            onClose: () => setIsCreateTaskModalOpen(false),
+            onClose: () => {
+              setIsCreateTaskModalOpen(false);
+              setIsCreatingTask(true);
+            },
             onCreateTask: () => setIsCreateTaskModalOpen(false),
+            teams,
           }}
+        />
+      ) : (
+        ""
+      )}
+      {isCreatingTask ? (
+        <CreationConfirmation
+          {...{ onClose: () => setIsCreatingTask(false) }}
         />
       ) : (
         ""

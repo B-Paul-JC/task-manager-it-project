@@ -4,23 +4,8 @@
  * @param {Object} formData - The form data.
  * @return {Promise<Object>} The server response.
  */
-export async function submitForm(formData) {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+export async function submitForm(formData, socket) {
+  socket.emit("create-task", formData);
 
-  const raw = JSON.stringify(formData);
-
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
-  };
-
-  const response = fetch(
-    "http://localhost:3001/api/tasks/create",
-    requestOptions
-  );
-
-  return await response.json();
+  // return await response.json();
 }

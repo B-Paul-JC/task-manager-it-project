@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useReducer, useState, Children, useEffect } from "react";
+import { useReducer, Children } from "react";
 import { reducer } from "../functions/reducer";
 import { submitForm } from "../functions/createTask";
+import { FaTimesCircle } from "react-icons/fa";
 
-export function CreationForm({ onClose }) {
-  const [teams, setTeams] = useState([]);
+export function CreationForm({ onClose, teams }) {
   const [state, dispatch] = useReducer(reducer, {
     title: "",
     description: "",
@@ -15,6 +15,13 @@ export function CreationForm({ onClose }) {
     },
     deadline: "",
   });
+  const priorities = [
+    "URGENT",
+    "IMPORTANT",
+    "MEDIUM IMPORTANCE",
+    "LOW IMPORTANCE",
+    "OPTIONAL",
+  ];
 
   const handleTitleChange = (e) =>
     dispatch({ type: "setTitle", value: e.target.value });
@@ -32,30 +39,6 @@ export function CreationForm({ onClose }) {
     });
   };
 
-  const getTeams = async () => {
-    fetch("http://localhost:3001/api/teams/all", { method: "POST" })
-      .then((response) => {
-        // Check if the response is successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        // Parse the response body as JSON
-        return response.json();
-      })
-      .then((data) => {
-        // Use the data here
-        setTeams(data.teams);
-      })
-      .catch((error) => {
-        // Handle errors
-        console.error("There was a problem with the fetch operation:", error);
-      });
-  };
-
-  useEffect(() => {
-    getTeams();
-  }, []);
-
   const { team } = state;
 
   const handleCreateTask = (e) => {
@@ -65,28 +48,33 @@ export function CreationForm({ onClose }) {
 
     const formData = new FormData(form);
     submitForm(formData);
-    console.log(formData);
     onClose();
   };
 
   return (
     <div className="fixed top-0 right-0 left-0 z-10 overflow-y-auto bg-black bg-opacity-40 w-full h-full">
-      <div className="flex items-center justify-center p-4">
+      <div
+        className="flex items-center justify-center p-4"
+        onClick={(ev) => {
+          if (ev.currentTarget == ev.target) onClose();
+        }}
+      >
         <div className="relative w-full max-w-lg">
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5"
-              onClick={onClose}
-            >
-              X
-            </button>
-          </div>
+          <div className="flex justify-end"></div>
           <div className="relative bg-white rounded-lg shadow-lg p-8">
             <form id="task-form">
-              <h1 className="text-lg text-gray-900 font-semibold">
-                Create Task
-              </h1>
+              <div className="flex flex-row justify-between">
+                <h1 className="text-lg text-gray-900 font-semibold">
+                  Create Task
+                </h1>
+                <button
+                  type="button"
+                  className="text-blue bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-2xl p-1.5"
+                  onClick={onClose}
+                >
+                  <FaTimesCircle />
+                </button>
+              </div>
               <div className="my-4">
                 <label
                   htmlFor="title"
@@ -133,9 +121,11 @@ export function CreationForm({ onClose }) {
                   name="priority"
                   onChange={(e) => handlePriorityChange(e)}
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
+                  {Children.toArray(
+                    priorities.map((item) => (
+                      <option value={item}>{item}</option>
+                    ))
+                  )}
                 </select>
               </div>
               <div className="my-4">
