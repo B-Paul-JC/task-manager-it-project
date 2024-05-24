@@ -13,6 +13,9 @@ function App() {
   const isCollapsed = useSelector((state) => state.collapse.value);
   const dispatch = useDispatch();
 
+  // Whenever this line executes, it causes stack overflow
+  // Anoying, not sure how to fix it
+  // I tried moving it to a different place, but that just cause more errors
   useSocket({
     handShakeAuth: "oauth",
     url: "http://localhost:3000",
