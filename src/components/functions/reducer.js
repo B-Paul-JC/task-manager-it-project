@@ -34,10 +34,8 @@ export const tasksAlertReducer = (state, action) => {
 
 export const registerReducer = (state, action) => {
   switch (action.type) {
-    case "setName":
-      return { ...state, name: action.value };
-    case "setEmail":
-      return { ...state, email: action.value };
+    case "setStaffId":
+      return { ...state, staffId: action.value };
     case "setPassword":
       return { ...state, password: action.value };
     case "setConfirmPassword":

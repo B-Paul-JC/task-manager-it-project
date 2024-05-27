@@ -3,37 +3,44 @@
 import { useState } from "react";
 import { CreationConfirmation } from "./create-tasks/confirmation";
 import { CreationForm } from "./create-tasks/creationForm";
+import { useLocation } from "react-router-dom";
+import WbSunnyRoundedIcon from "@mui/icons-material/WbSunnyRounded";
+import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 
 export function Header(props) {
   const { taskType, teamId, teams } = props;
   const [isAdmin, setIsAdmin] = useState(true);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isCreatingTask, setIsCreatingTask] = useState(false);
+  const currentLocation = useLocation()
+    .pathname.substring(1)
+    .replace("/", " / ");
 
   return (
-    <header className="absolute top bg-white w-full flex flex-row items-end justify-between p-4 shadow-md pl-72 z-2 font-poppins">
+    <header className="absolute top w-full flex flex-row items-end justify-between p-8 z-2 font-poppins">
       <div>
-        {!taskType ? (
-          <></>
-        ) : (
-          <>
-            <h3 className="font-bold">Tasks</h3>
-            <h5>A list of all the {taskType} tasks for you team</h5>
-          </>
-        )}
+        <h2 className="capitalize font-semibold">{currentLocation || "/"}</h2>
+        <p className="prose capitalize text-3xl font-semibold">
+          {taskType || "Home"}
+        </p>
       </div>
-      <div className="flex flex-col items-end">
-        {isAdmin ? (
-          <button
-            className="rounded-md py-1 px-4 bg-blue text-white font-poppins hover:shadow-lg shadow-black"
-            onClick={() => setIsCreateTaskModalOpen(true)}
-          >
-            + Create
+      <div className="flex flex-row">
+        <div className="flex flex-row justify-between items-center shadow-md bg-white p-2 rounded-full">
+          <input
+            type="text"
+            placeholder="search"
+            className="border-0 bg-grey rounded-4xl"
+          />
+          <button className="m-2 text-black-shade">
+            <WbSunnyRoundedIcon />
           </button>
-        ) : (
-          ""
-        )}
-        <h6 className="inline text-xs py-2">Team ID: #{teamId}</h6>
+          <button className="m-2 text-black-shade">
+            <NotificationsActiveRoundedIcon />
+          </button>
+          <div className="avatar h-10 w-10 rounded-full overflow-hidden">
+            <img src="https://i.pravatar.cc" alt="" />
+          </div>
+        </div>
       </div>
       {isCreateTaskModalOpen ? (
         <CreationForm

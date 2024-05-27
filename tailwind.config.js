@@ -27,12 +27,15 @@ export default {
       main: "#f1f1f1",
       "black-shade": "#AAAAAA",
       black: "#000000",
+      "alley-blue": "#F0F8FF",
+      red: "#ff3333",
     },
     fontFamily: {
       "open-sans": ["Open Sans", "sans-serif"],
       "noto-sans": ["Noto Sans", "sans-serif"],
       roboto: ["Roboto", "sans-serif"],
       poppins: ["Poppins", "sans-serif"],
+      neuton: ["Neuton", "serif"],
     },
     transitionDuration: {
       DEFAULT: "300ms",

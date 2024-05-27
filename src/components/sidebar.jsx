@@ -1,24 +1,14 @@
 /* eslint-disable react/prop-types */
 import Logo from "../assets/images/Manager.gif";
-import {
-  Sidebar,
-  Menu,
-  MenuItem,
-  sidebarClasses,
-  menuClasses,
-} from "react-pro-sidebar";
-import { Notification } from "./view-tasks/notifier";
-import {
-  FaUsers,
-  FaCalendar,
-  FaUser,
-  FaQuestionCircle,
-  FaPlayCircle,
-  FaPauseCircle,
-  FaCheckCircle,
-  FaHome,
-} from "react-icons/fa";
-import { Link } from "react-router-dom";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import PendingActionsRoundedIcon from "@mui/icons-material/PendingActionsRounded";
+import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import TodayRoundedIcon from "@mui/icons-material/TodayRounded";
+import { Link, useLocation } from "react-router-dom";
+import { Children } from "react";
 
 /**
  * The sidebar component that contains the main navigation
@@ -27,87 +17,121 @@ import { Link } from "react-router-dom";
  * open or closed by clicking on the hamburger button.
  */
 
-export function AppSideBar(props) {
-  const { isCollapsed, setIsCollapsed } = props;
+export function AppSideBar() {
+  const currentLocation = useLocation().pathname;
+
+  /**
+   * The properties of the sidebar component.
+   * @type {BarProps[]}
+   */
+  const barProps1 = [
+    {
+      name: "Home",
+      to: "/",
+      location: "/",
+      component: <HomeRoundedIcon />,
+      breakPoint: true,
+    },
+    {
+      name: "Active",
+      to: "/tasks/active",
+      location: "/tasks/active",
+      component: <PlayArrowRoundedIcon />,
+    },
+    {
+      name: "Pending",
+      to: "/tasks/pending",
+      location: "/tasks/pending",
+      component: <PendingActionsRoundedIcon />,
+    },
+    {
+      name: "Completed",
+      to: "/tasks/completed",
+      location: "/tasks/completed",
+      component: <TaskAltRoundedIcon />,
+      breakPoint: true,
+    },
+    {
+      name: "Team",
+      to: "/team",
+      location: "/team",
+      component: <GroupRoundedIcon />,
+    },
+  ];
+
+  const barProps2 = [
+    {
+      name: "Profile",
+      to: "/profile",
+      location: "/profile",
+      component: <ManageAccountsRoundedIcon />,
+    },
+    {
+      name: "Calendar",
+      to: "/calendar",
+      location: "/calendar",
+      component: <TodayRoundedIcon />,
+    },
+  ];
+
   return (
-    <>
-      <Sidebar
-        collapsed={isCollapsed}
-        style={{ height: "100vh", position: "fixed" }}
-        className="shadow-md shadow-black-shade font-poppins fixed z-10"
-        rootStyles={{
-          [`.${sidebarClasses.container}`]: {
-            backgroundColor: "white",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            color: "gray",
-          },
-          [`.${menuClasses.icon}`]: {
-            color: "dodgerblue",
-            fontSize: "1rem",
-          },
-        }}
-      >
-        <Menu
-          menuItemStyles={{
-            button: {
-              [`&.active`]: {
-                color: "black",
-                backgroundColor: "grey",
-              },
-            },
-          }}
-        >
-          <MenuItem
-            className={`flex flex-row  hover:bg-transparent ${
-              !isCollapsed ? "h-36" : "h-10 mt-4"
-            } items-center justify-center`}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          >
-            <img src={Logo} className="w-32" />
-          </MenuItem>
-
-          <MenuItem icon={<FaHome />} component={<Link to={"/"} />}>
-            Home
-          </MenuItem>
-          <MenuItem>Tasks</MenuItem>
-          <MenuItem
-            icon={<FaPlayCircle />}
-            component={<Link to={"/tasks/active"} />}
-          >
-            Active <Notification taskType="active" />
-          </MenuItem>
-          <MenuItem
-            icon={<FaPauseCircle />}
-            component={<Link to={"/tasks/pending"} />}
-          >
-            Pending <Notification taskType="pending" />
-          </MenuItem>
-          <MenuItem
-            icon={<FaCheckCircle />}
-            component={<Link to={"/tasks/completed"} />}
-          >
-            Completed <Notification taskType="completed" />
-          </MenuItem>
-
-          <MenuItem>User</MenuItem>
-          <MenuItem icon={<FaUsers />} component={<Link to={"/user/team"} />}>
-            Team
-          </MenuItem>
-          <MenuItem icon={<FaUser />} component={<Link to={"/user/profile"} />}>
-            Profile
-          </MenuItem>
-          <MenuItem
-            icon={<FaQuestionCircle />}
-            compnent={<Link to={"/faqs"} />}
-          >
-            FAQ
-          </MenuItem>
-          <MenuItem icon={<FaCalendar />} component={<Link to={"/calender"} />}>
-            Calendar
-          </MenuItem>
-        </Menu>
-      </Sidebar>
-    </>
+    <aside
+      className="h-full fixed z-20 w-16 flex py-4 flex-col items-center justify-between"
+      style={{ backgroundColor: "#070a18" }}
+    >
+      <div className="w-10 aspect-square m-0 rounded-full overflow-hidden ">
+        <img src={Logo} alt="" />
+      </div>
+      <div className="flex flex-col items-center justify-between">
+        {Children.toArray(
+          barProps1.map((item) => (
+            <>
+              <span className="py-1 group">
+                <Link
+                  to={item.to}
+                  className={`text-grey px-4 relative py-3 flex flex-row ${
+                    currentLocation == item.location ? "active" : ""
+                  }`}
+                  style={{ backgroundColor: "#070a18" }}
+                >
+                  {item.component}{" "}
+                  <span
+                    className="absolute group-hover:scale-x-100 scale-x-0 ml-11 rounded-r-3xl origin-left pl-2 pr-4 py-3 top-0 z-10"
+                    style={{ backgroundColor: "#070a18" }}
+                  >
+                    {item.name}
+                  </span>
+                </Link>
+              </span>
+            </>
+          ))
+        )}
+      </div>
+      <div>
+        {Children.toArray(
+          barProps2.map((item) => (
+            <>
+              <span className="py-1 group">
+                <Link
+                  to={item.name}
+                  className={`text-grey px-4 relative py-3 flex flex-row ${
+                    currentLocation == item.location ? "active" : ""
+                  }`}
+                  style={{ backgroundColor: "#070a18" }}
+                >
+                  {item.component}{" "}
+                  <span
+                    className="absolute group-hover:scale-x-100 scale-x-0 ml-11 rounded-r-3xl origin-left pl-2 pr-4 py-3 top-0 z-10"
+                    style={{ backgroundColor: "#070a18" }}
+                  >
+                    {item.name}
+                  </span>
+                </Link>
+              </span>
+            </>
+          ))
+        )}
+      </div>
+    </aside>
   );
 }
