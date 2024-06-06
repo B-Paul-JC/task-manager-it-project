@@ -1,14 +1,21 @@
-export const submitApplication = (formData) =>
-  fetch("http://localhost:3000/api/teams/apply", {
-    method: "POST",
-    body: formData,
-  });
-
-export const login = ({ staffId, password }) =>
-  fetch("http://localhost:3000/api/login", {
+export const submitApplication = (formData) => {
+  const body = JSON.stringify(formData);
+  return fetch("http://localhost:3000/api/teams/apply", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: JSON.stringify({ staffId, password }),
+    body,
   });
+};
+
+export const login = (formData) => {
+  const body = JSON.stringify(formData);
+  return fetch("http://localhost:3000/api/teams/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+};

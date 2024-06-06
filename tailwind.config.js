@@ -29,6 +29,13 @@ export default {
       black: "#000000",
       "alley-blue": "#F0F8FF",
       red: "#ff3333",
+      priority: {
+        urgent: "#FF0000",
+        important: "#FF8C00",
+        medium: "#FFD700",
+        low: "#00FF00",
+        optional: "#808080",
+      },
     },
     fontFamily: {
       "open-sans": ["Open Sans", "sans-serif"],

@@ -25,7 +25,7 @@ export function Header(props) {
         </p>
       </div>
       <div className="flex flex-row">
-        <div className="flex flex-row justify-between items-center shadow-md bg-white p-2 rounded-full">
+        <div className="flex flex-row justify-between items-center shadow-inner shadow-black-shade backdrop-blur-xl bg-opacity-50 bg-white p-3 rounded-full">
           <input
             type="text"
             placeholder="search"

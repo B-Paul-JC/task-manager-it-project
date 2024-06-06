@@ -1,5 +1,6 @@
 import { ArrowOutwardRounded, ArrowUpwardRounded } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { Loader } from "../loader";
 
 export function TaskPlaceholder() {
   return (
@@ -55,17 +56,20 @@ export function TaskPlaceholder() {
 
 export const GetStarted = () => {
   return (
-    <div className="text-center flex flex-row justify-between bg-white shadow-md w-64 h-12 items-center p-10 rounded-lg">
-      <Link to="/apply">
-        <button className="bg-blue hover:bg-blue-700 text-white py-2 px-4 rounded">
-          Apply
-        </button>
-      </Link>
-      <Link to="/login">
-        <button className="bg-blue hover:bg-blue-700 text-white py-2 px-4 rounded">
-          Login
-        </button>
-      </Link>
+    <div className="w-full h-screen grid bg-silver grid-cols-6 grid-rows-6 place-items-center">
+      <Loader isStandAlone={false} />
+      <div className="text-center z-30 flex flex-row justify-between bg-white shadow-md w-64 h-12 items-center p-10 rounded-lg col-start-2 col-end-6 row-start-5 row-end-7">
+        <Link to="/apply">
+          <button className="bg-blue hover:bg-blue-700 text-white py-2 px-4 rounded">
+            Apply
+          </button>
+        </Link>
+        <Link to="/login">
+          <button className="bg-blue hover:bg-blue-700 text-white py-2 px-4 rounded">
+            Login
+          </button>
+        </Link>
+      </div>
     </div>
   );
 };

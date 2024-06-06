@@ -1,7 +1,7 @@
 import App from "./App";
 import ErrorPage from "./components/errorPage";
 import { LoginPage } from "./components/user-views/login";
-import RegisterPage from "./components/user-views/apply";
+import { ApplicationPage } from "./components/user-views/apply";
 
 export const routes = [
   {
@@ -11,10 +11,10 @@ export const routes = [
     loader: () => ({
       taskType: "",
       teamId: "l5wu7opeq4h843e19g",
-      staffId: localStorage.getItem("token"),
+      token: localStorage.getItem("token") || "",
     }),
   },
-  { path: "/apply", element: <RegisterPage /> },
+  { path: "/apply", element: <ApplicationPage /> },
   { path: "/login", element: <LoginPage /> },
   {
     path: "tasks/:type",
@@ -24,7 +24,7 @@ export const routes = [
       return {
         taskType: params.type,
         teamId: "l5wu7opeq4h843e19g",
-        staffId: localStorage.getItem("token"),
+        token: localStorage.getItem("token") || "",
       };
     },
   },

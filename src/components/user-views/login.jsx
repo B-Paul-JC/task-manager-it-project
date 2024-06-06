@@ -9,19 +9,20 @@ export const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const response = await login({ staffId, password });
-    const data = await response.json();
-
-    if (data.success) {
-      localStorage.setItem("token", data.token);
-      window.location.href = "/";
-    } else {
-      alert(data.message);
-    }
+    login({ staffId, password })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          window.location.href = "/";
+        } else {
+          alert(data.message);
+        }
+      });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-grey">
+    <div className="flex flex-col items-center justify-center h-screen bg-silver">
       <div className="w-1/3 bg-white shadow-md p-8 rounded-lg">
         <h1 className="text-3xl mb-4">Login</h1>
         <form onSubmit={handleLogin}>

@@ -4,51 +4,70 @@
 import { AppSideBar } from "./components/sidebar";
 import { Header } from "./components/header";
 import TasksView from "./components/view-tasks/tasksView";
-import { useState } from "react";
 import "./styles/app.css";
-import { useLoaderData } from "react-router-dom";
-import { useSocket } from "./components/functions/socketHook";
 import {
   GetStarted,
   TaskPlaceholder,
 } from "./components/view-tasks/placeholder";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  insertTeamsAsync,
+  setIsLoggedIn,
+  setTaskType,
+} from "./manager/appSlice";
+import { useEffect } from "react";
+import { Loader } from "./components/loader";
+import { useLoaderData } from "react-router";
 
 function App() {
-  const { taskType, teamId } = useLoaderData();
-  const { isLoggedIn, setIsLoggedIn } = useState(false);
-  const { socket, teams } = useSocket({
-    handShakeAuth: "oauth",
-    url: "http://localhost:3000",
-    onConnect: () => {
-      console.log("Connected to socket");
-      socket.emit("subscribe", teamId);
-    },
-  });
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const APPSTATE = useSelector((state) => state.general);
+  const { token, taskType } = useLoaderData();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(insertTeamsAsync());
+    dispatch(setIsLoggedIn(!!token));
+    dispatch(setTaskType(taskType));
+  }, [dispatch, token, taskType]);
 
   return (
     <>
-      {!isLoggedIn ? (
-        <div className="grid place-items-center h-screen">
-          <GetStarted />
-        </div>
-      ) : (
+      {APPSTATE.teams ? (
         <>
-          <AppSideBar {...{ isCollapsed, setIsCollapsed, teamId, teams }} />
-          <main
-            className="relative font-poppins bg-alley-blue shadow-inner-full h-dvh text-sm ml-16"
-            style={{ width: "calc(100% - 64px)!important" }}
-          >
-            <Header {...{ taskType, teamId, teams }} />
-            <section className="w-11/12 mx-10 bg-white rounded-lg absolute mt-28 h-3/4 shadow-md">
-              {!taskType ? (
-                <TaskPlaceholder />
-              ) : (
-                <TasksView {...{ taskType, teamId, teams }} />
-              )}
-            </section>
-          </main>
+          {!APPSTATE.isLoggedIn ? (
+            <GetStarted />
+          ) : (
+            <>
+              <AppSideBar />
+              <main
+                className="relative font-poppins bg-alley-blue shadow-inner-full h-dvh text-sm ml-16"
+                style={{ width: "calc(100% - 64px)!important" }}
+              >
+                <Header />
+                <section className="w-11/12 overflow-y-scroll scrollbar-edited mx-10 bg-white rounded-lg absolute mt-28 h-3/4 shadow-md">
+                  {!APPSTATE.taskType ? (
+                    <TaskPlaceholder />
+                  ) : (
+                    <TasksView taskType={taskType} />
+                  )}
+                </section>
+                <div className="fixed flex flex-row items-center gap-x-5 right-6 bottom-2">
+                  <button
+                    className="rounded-md bg-tahiti bg-opacity-40 backdrop-blur-lg px-6 py-2 shadow-lg shadow-black-shade"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      dispatch(setIsLoggedIn(false));
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              </main>
+            </>
+          )}
         </>
+      ) : (
+        <Loader />
       )}
     </>
   );
