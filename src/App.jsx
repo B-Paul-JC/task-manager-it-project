@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   insertTeamsAsync,
+  insertUserTeamsAsync,
   setIsLoggedIn,
   setTaskType,
 } from "./manager/appSlice";
@@ -28,6 +29,9 @@ function App() {
     dispatch(insertTeamsAsync());
     dispatch(setIsLoggedIn(!!token));
     dispatch(setTaskType(taskType));
+    if (token) {
+      dispatch(insertUserTeamsAsync(token));
+    }
   }, [dispatch, token, taskType]);
 
   return (
@@ -44,12 +48,14 @@ function App() {
                 style={{ width: "calc(100% - 64px)!important" }}
               >
                 <Header />
-                <section className="w-11/12 overflow-y-scroll scrollbar-edited mx-10 bg-white rounded-lg absolute mt-28 h-3/4 shadow-md">
-                  {!APPSTATE.taskType ? (
-                    <TaskPlaceholder />
-                  ) : (
-                    <TasksView taskType={taskType} />
-                  )}
+                <section
+                  className={`w-11/12 overflow-y-scroll scrollbar-edited mx-10 ${
+                    APPSTATE.taskType
+                      ? "bg-opacity-10 bg-gradient-to-br from-silver to-alley-blue"
+                      : "bg-white"
+                  } rounded-lg backdrop-blur-md border-white border-2 absolute mt-28 h-3/4 shadow-md`}
+                >
+                  {!APPSTATE.taskType ? <TaskPlaceholder /> : <TasksView />}
                 </section>
                 <div className="fixed flex flex-row items-center gap-x-5 right-6 bottom-2">
                   <button

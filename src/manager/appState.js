@@ -7,7 +7,10 @@ export const generalAppState = {
   isCreatingTask: false,
   taskType: null,
   teams: [],
+  userTeams: [],
   teamId: null,
   staffId: null,
   isAdmin: false,
+  rejectionReason: "",
+  showModal: false,
 };

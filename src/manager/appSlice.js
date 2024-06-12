@@ -35,12 +35,25 @@ const generalAppReducer = createSlice({
     setIsAdmin: (state, action) => {
       state.isAdmin = action.payload;
     },
+    setShowModal: (state) => {
+      console.log("Clicking");
+      state.showModal = !state.showModal;
+    },
+    setRejectionReason: (state, action) => {
+      state.rejectionReason = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(insertTeamsAsync.fulfilled, (state, action) => {
       state.teams = action.payload;
     });
     builder.addCase(insertTeamsAsync.rejected, () => {
+      alert("Unable to get teams");
+    });
+    builder.addCase(insertUserTeamsAsync.fulfilled, (state, action) => {
+      state.userTeams = action.payload;
+    });
+    builder.addCase(insertUserTeamsAsync.rejected, () => {
       alert("Unable to get teams");
     });
   },
@@ -51,6 +64,27 @@ export const insertTeamsAsync = createAsyncThunk(
   async () => {
     const data = await fetch("http://localhost:3000/api/teams/all", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    const { teams } = await data.json();
+    console.log(teams);
+
+    return teams;
+  }
+);
+
+export const insertUserTeamsAsync = createAsyncThunk(
+  "general/insertUserTeamsAsync",
+  async (staffId) => {
+    const body = JSON.stringify({ staffId });
+    const data = await fetch("http://localhost:3000/api/teams/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body,
     });
     const { teams } = await data.json();
     console.log(teams);
@@ -70,5 +104,7 @@ export const {
   setTaskType,
   setTeamId,
   setStaffId,
+  setShowModal,
+  setRejectionReason,
 } = generalAppReducer.actions;
 export default generalAppReducer.reducer;
